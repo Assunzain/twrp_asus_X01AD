@@ -44,4 +44,5 @@ PRODUCT_PROPERTY_OVERRIDES += \
     sys.usb.rndis.func.name=rndis_bam \
     sys.usb.rmnet.func.name=rmnet_bam
 
+
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/ASUS/X01AD/recovery/root,recovery/root)
