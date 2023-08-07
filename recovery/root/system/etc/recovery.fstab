@@ -36,7 +36,7 @@
 /dev/block/bootdevice/by-name/system                                 /                        ext4      ro,barrier=1                                                                                   wait,avb
 /dev/block/bootdevice/by-name/vendor                                 /vendor                  ext4      ro,barrier=1                                                                                   wait,recoveryonly
 /dev/block/bootdevice/by-name/userdata                               /data                    ext4      noatime,nosuid,nodev,barrier=1,noauto_da_alloc,discard                                         wait,check,fileencryption=::v1,quota,reservedsize=128M
-/dev/block/bootdevice/by-name/userdata                               /data                    f2fs      noatime,nosuid,nodev,discard,reserve_root=32768,resgid=1065,fsync_mode=nobarrier               latemount,wait,check,fileencryption=ice,wrappedkey,quota,reservedsize=128M
+/dev/block/bootdevice/by-name/userdata                               /data                    f2fs      noatime,nosuid,nodev,discard,reserve_root=32768,resgid=1065,fsync_mode=nobarrier               latemount,wait,check,fileencryption=::v1,wrappedkey,quota,reservedsize=128M
 
 /dev/block/bootdevice/by-name/config                                 /frp                     emmc      defaults                                                                                       defaults
 /dev/block/bootdevice/by-name/misc                                   /misc                    emmc      defaults                                                                                       defaults
