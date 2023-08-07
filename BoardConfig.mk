@@ -121,8 +121,12 @@ TW_HAS_EDL_MODE := true
 TW_USE_TOOLBOX := true
 TW_SKIP_COMPATIBILITY_CHECK := true
 TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/virtual/thermal/thermal_zone3/temp
-PB_DISABLE_DEFAULT_DM_VERITY := true
-PB_TORCH_PATH := "/sys/class/leds/led:torch_1"
+OF_MAINTAINER := Hirokixd28
+OF_KEEP_DM_VERITY_FORCED_ENCRYPTION := true
+OF_TARGET_DEVICES := X01AD
+OF_USE_SYSTEM_FINGERPRINT := true
+OF_MAINTAINER_AVATAR := include/ane.png
+
 
 # Debug
 TWRP_INCLUDE_LOGCAT := true
