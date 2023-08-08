@@ -125,7 +125,6 @@ jobs:
 
     - name: Building recovery
       run: |
-        sudo rm -rf out/ 
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka ${{ github.event.inputs.BUILD_TARGET }} -j$(nproc --all) -j8
