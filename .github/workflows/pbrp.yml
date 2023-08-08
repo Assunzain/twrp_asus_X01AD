@@ -128,7 +128,6 @@ jobs:
         sudo rm -rf out/ 
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        export TW_PREPARE_DATA_MEDIA_EARLY=true
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka ${{ github.event.inputs.BUILD_TARGET }} -j$(nproc --all) -j8
       working-directory: ${{ steps.pwd.outputs.pwd }}
 
