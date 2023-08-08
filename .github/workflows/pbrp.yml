@@ -55,7 +55,7 @@ on:
         required: false
         default: 'system/bin/qseecomd'
 
-jobs:
+  jobs:
   build:
     if: github.event.repository.owner.id == github.event.sender.id
     runs-on: buildjet-64vcpu-ubuntu-2204
@@ -67,6 +67,7 @@ jobs:
     - name: Check Out
       uses: actions/checkout@v3
 
+    # Cleanup The Actions Workspace Using Custom Composite Run Actions
     - name: Cleanup
       uses: rokibhasansagar/slimhub_actions@main
       
