@@ -10,7 +10,6 @@ on:
         type: choice
         options:
         - repo init -u https://github.com/SHRP/manifest.git
-
       MANIFEST_BRANCH:
         description: 'Manifest Branch'
         required: true
