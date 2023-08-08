@@ -1,0 +1,156 @@
+ name: Recovery Builder - PBRP
+   
+   on:
+  workflow_dispatch:
+    inputs:
+      MANIFEST_URL:
+        description: 'Manifest'
+        required: true
+        default: ''
+        type: choice
+        options:
+        - https://github.com/PitchBlackRecoveryProject/manifest_pb.git
+      MANIFEST_BRANCH:
+        description: 'Manifest Branch'
+        required: true
+        default: 'android-12.1'
+      DEVICE_TREE:
+        description: 'Custom Recovery Tree' # Your already made Device Tree for TWRP
+        required: true
+        default: 'https://github.com/Assunzain/twrp_asus_X01AD'
+      DEVICE_TREE_BRANCH:
+        description: 'Custom Recovery Tree Branch' # Your Device Tree Branch, make sure it's right.
+        required: true
+        default: 'pbrp-12.1'
+      DEVICE_PATH:
+        description: 'Specify your Device Path' # As is, just like your DEVICE_PATH in your BoardConfig.mk
+        required: true
+        default: 'device/asus/X01AD'
+      DEVICE_NAME:
+        description: 'Specify your Device Codename' # As is, just like your PRODUCT_DEVICE in your device tree.
+        required: true
+        default: 'X01AD'
+      MAKEFILE_NAME:
+        description: 'Specify your Makefile Name' # Look for twrp_ or omni_codename.mk, just remove the .mk
+        required: true
+        default: 'twrp_X01AD'
+      BUILD_TARGET:
+        description: 'Specify your Build Target' # Pick among boot, recovery and vendor_boot
+        required: true
+        default: 'recovery'
+        type: choice
+        options:
+        - boot
+        - recovery
+        - vendorboot
+      FILE_TO_CHECK:
+        description: 'Specify which libs to check' # Use it know what kind of dependencies your missing for decryption.
+        required: false
+        default: 'system/bin/qseecomd'
+
+  jobs:
+  build:
+    if: github.event.repository.owner.id == github.event.sender.id
+    runs-on: buildjet-64vcpu-ubuntu-2204
+    permissions:
+      contents: write
+    steps:
+ 
+    # You might want to Checkout your repo first, but not mandatory
+    - name: Check Out
+      uses: actions/checkout@v3
+
+    # Cleanup The Actions Workspace Using Custom Composite Run Actions
+    - name: Cleanup
+      uses: rokibhasansagar/slimhub_actions@main
+      
+    - name: Set Swap Space
+      uses: pierotofy/set-swap-space@master
+      with:
+        swap-size-gb: 12
+
+    - name: Prepare the Environment
+      run: |
+        sudo apt remove shim-signed grub-efi-amd64-bin --allow-remove-essential
+        sudo apt-get update
+        sudo apt-get -y upgrade
+        sudo apt-get -y install gperf gcc-multilib gcc-10-multilib g++-multilib g++-10-multilib libc6-dev lib32ncurses5-dev x11proto-core-dev libx11-dev tree lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc bc ccache lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libwxgtk3.0-gtk3-dev libxml2 lzop pngcrush schedtool squashfs-tools imagemagick libbz2-dev lzma ncftp qemu-user-static libstdc++-10-dev 2to3 python2-minimal python2 dh-python python-is-python3
+
+    - name: Install OpenJDK
+      run: |
+        git clone https://github.com/cd-Spidey/Random.git ./opendjk
+        sudo bash opendjk/setup/packages/open_jdk.sh
+        
+    - name: Install Git-Repo
+      run: |
+        git config --global advice.detachedHead false
+        git clone https://android.googlesource.com/tools/repo -b v2.30 ~/bin
+        chmod a+x ~/bin/repo
+        sudo ln -sf ~/bin/repo /usr/bin/repo
+
+    - name: Initialize Repo
+      run: |
+        mkdir workspace
+        cd workspace
+        echo "workdir=$(pwd)" >> $GITHUB_OUTPUT
+        git config --global user.name "Assunzain"
+        git config --global user.email "asepsunanda.zain@gmail.com"
+        repo init --depth=1 -u ${{ github.event.inputs.MANIFEST_URL }} -b ${{ github.event.inputs.MANIFEST_BRANCH }}
+      id: pwd
+        
+    - name: Repo Sync
+      run: |
+        repo sync -j$(nproc --all) --force-sync -j8
+      working-directory: workspace
+      
+    - name: Clone Device Tree
+      run: |
+        git clone ${{ github.event.inputs.DEVICE_TREE }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
+      working-directory: ${{ steps.pwd.outputs.workdir }}
+
+    - name: Check Build Tree
+      uses: haya14busa/action-cond@v1
+      id: buildtree
+      with:
+        cond: ${{ github.event.inputs.MANIFEST_BRANCH == 'twrp-11' || github.event.inputs.MANIFEST_BRANCH == 'twrp-12.1' }}
+        if_true: twrp
+        if_false: omni
+
+    - name: Sync Dependencies
+      run: |
+        bash ${GITHUB_WORKSPACE}/scripts/convert.sh ${{ github.event.inputs.DEVICE_PATH }}/${{ steps.buildtree.outputs.value }}.dependencies
+        repo sync -j$(nproc --all) -j8
+      working-directory: ${{ steps.pwd.outputs.workdir }}
+      continue-on-error: true
+
+  - name: Building recovery
+      run: |
+        cd ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+        set +e
+        source build/envsetup.sh
+        export ALLOW_MISSING_DEPENDENCIES=true
+        set -e
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+      continue-on-error: true
+
+    - name: Check the output directory before uploading
+      run: |
+        ls -al ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/
+        echo
+        ls -al ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/
+
+    - name: Upload to Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
+          ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
+        name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
+        tag_name: ${{ github.run_id }}
+        body: |
+          Manifest: ${{ github.event.inputs.MANIFEST_BRANCH }}
+          Device: ${{ github.event.inputs.DEVICE_NAME }}
+          Target: ${{ github.event.inputs.BUILD_TARGET }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
