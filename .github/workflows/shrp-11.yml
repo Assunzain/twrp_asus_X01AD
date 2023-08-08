@@ -123,13 +123,13 @@ jobs:
       working-directory: ${{ steps.pwd.outputs.workdir }}
       continue-on-error: true
 
-    - name: Building recovery
+    - name: Building Recovery
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka ${{ github.event.inputs.BUILD_TARGET }} -j$(nproc --all) -j8
-      working-directory: ${{ steps.pwd.outputs.pwd }}
-
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all) -j8
+      working-directory: ${{ steps.pwd.outputs.workdir }}
+      
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
