@@ -7,7 +7,7 @@ name: Recovery Builder - PBRP
 # https://github.com/azwhikaru for Recovery Builder Template
 # And all Contributors in every repositories I used
 
-on:
+  on:
   workflow_dispatch:
     inputs:
       MANIFEST_URL:
