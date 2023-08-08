@@ -1,4 +1,4 @@
-name: Recovery Builder - PBRP
+name: Recovery Builder - SHRP
    
 on:
   workflow_dispatch:
