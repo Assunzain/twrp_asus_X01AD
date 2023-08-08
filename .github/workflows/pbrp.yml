@@ -1,7 +1,7 @@
-name: Recovery Builder - PBRP
+   name: Recovery Builder - PBRP
 
-  on:
-  workflow_dispatch:
+   on:
+   workflow_dispatch:
     inputs:
       MANIFEST_URL:
         description: 'Manifest'
