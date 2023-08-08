@@ -123,34 +123,48 @@ jobs:
       working-directory: ${{ steps.pwd.outputs.workdir }}
       continue-on-error: true
 
-    - name: Building recovery
+    - name: Building Recovery
       run: |
-        cd ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        set +e
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        set -e
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all) -j8
-      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
-      continue-on-error: true
-
-    - name: Check the output directory before uploading
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+      working-directory: ${{ steps.pwd.outputs.workdir }}
+      
+    - name: Set Properties # Output will be use in final name of recovery.
+      id: props
       run: |
-        ls -al ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/
-        echo
-        ls -al ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/
-
+        echo "date=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
+      
+    - name: Renaming into PBRP
+      run: |
+        cd out/target/product/${{ github.event.inputs.DEVICE_NAME }}
+        mv ${{ github.event.inputs.MANIFEST_BRANCH }}-3.7.0-${{ github.event.inputs.DEVICE_NAME }}-${{ steps.props.outputs.date }}.img
+      working-directory: ${{ steps.pwd.outputs.workdir }}
+      
     - name: Upload to Release
-      uses: softprops/action-gh-release@v1
+      uses: ncipollo/release-action@v1.11.1
       with:
-        files: |
-          ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
-          ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
-        name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
-        tag_name: ${{ github.run_id }}
+        artifacts: workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/${{ github.event.inputs.MANIFEST_BRANCH }}*.img
+        name: Unofficial PBRP for ${{ github.event.inputs.DEVICE_NAME }} - Build ${{ steps.props.outputs.date }} / ${{ github.run_id }}
+        draft: false
+        prerelease: true
+        tag: ${{ github.run_id }}-${{ steps.props.outputs.date }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         body: |
-          Manifest: ${{ github.event.inputs.MANIFEST_BRANCH }}
           Device: ${{ github.event.inputs.DEVICE_NAME }}
-          Target: ${{ github.event.inputs.BUILD_TARGET }}
+          Manifest: ${{ github.event.inputs.MANIFEST_URL }} -b ${{ github.event.inputs.MANIFEST_BRANCH }}
+          Status: Alpha - Test it Yourself.
+
+    - name: Link of Release
+      run: |
+        echo "Here is your newly-built Custom Recovery."
+        echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${{ github.run_id }}-${{ steps.props.outputs.date }}"
+
+# LDCheck works not just in qseecomd, you can target a different file, as long as it is existing in target-out folder.
+    - name: Run LDCheck
+      run: |
+        cd workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/recovery/root
+        python3 ldcheck -p system/lib64:vendor/lib64 -d ${{ github.event.inputs.FILE_TO_CHECK }}
+      continue-on-error: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
