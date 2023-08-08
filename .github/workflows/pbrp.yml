@@ -51,7 +51,7 @@ on:
 jobs:
   build:
     if: github.event.repository.owner.id == github.event.sender.id
-    runs-on: buildjet-64vcpu-ubuntu-2204
+    runs-on: ubuntu-22.04
     permissions:
       contents: write
     steps:
@@ -130,7 +130,7 @@ jobs:
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         set -e
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all) -j8
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
       continue-on-error: true
 
