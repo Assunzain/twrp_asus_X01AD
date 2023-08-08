@@ -106,7 +106,7 @@ jobs:
     - name: Clone Device Tree
       run: |
         git clone ${{ github.event.inputs.DEVICE_TREE }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
-      working-directory: ${{ steps.pwd.outputs.workdir }}
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Check Build Tree
       uses: haya14busa/action-cond@v1
@@ -120,7 +120,7 @@ jobs:
       run: |
         bash ${GITHUB_WORKSPACE}/scripts/convert.sh ${{ github.event.inputs.DEVICE_PATH }}/${{ steps.buildtree.outputs.value }}.dependencies
         repo sync -j$(nproc --all) -j8
-      working-directory: ${{ steps.pwd.outputs.workdir }}
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
       continue-on-error: true
 
     - name: Building Recovery
@@ -128,14 +128,14 @@ jobs:
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all) -j8
-      working-directory: ${{ steps.pwd.outputs.workdir }}
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
       
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ${{ steps.pwd.outputs.pwd }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
-          ${{ steps.pwd.outputs.pwd }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
+          workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
+          workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
         name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
         body: |
