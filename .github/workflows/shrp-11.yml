@@ -9,7 +9,7 @@ on:
         default: ''
         type: choice
         options:
-        - https://github.com/SHRP/manifest/tree/v3_11.0
+        - https://github.com/SHRP/manifest
       MANIFEST_BRANCH:
         description: 'Manifest Branch'
         required: true
