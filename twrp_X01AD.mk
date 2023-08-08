@@ -19,7 +19,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
 
 # Inherit some common Omni stuff.
-$(call inherit-product, vendor/twrp/config/common.mk)
+$(call inherit-product, vendor/pb/config/common.mk)
+
 
 # Charger
 PRODUCT_PACKAGES += \
@@ -45,4 +46,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
     sys.usb.rmnet.func.name=rmnet_bam
 
 
-PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/ASUS/X01AD/recovery/root,recovery/root)
+PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/asus/X01AD/recovery/root,recovery/root)
