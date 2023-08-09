@@ -1,4 +1,4 @@
-name: Recovery Builder - PBRP
+name: Recovery Builder - OrangeFOX
    
 on:
   workflow_dispatch:
