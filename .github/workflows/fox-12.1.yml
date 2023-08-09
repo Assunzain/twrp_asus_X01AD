@@ -47,7 +47,7 @@ on:
         default: 'system/bin/qseecomd'
 
 jobs:
-  build:
+    build:
     if: github.event.repository.owner.id == github.event.sender.id
     runs-on: ubuntu-22.04
     permissions:
