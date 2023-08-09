@@ -14,7 +14,7 @@
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
-        default: 'https://github.com/Wrdn28/pbrp'
+        default: 'https://github.com/Assunzain/twrp_asus_X01AD'
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
