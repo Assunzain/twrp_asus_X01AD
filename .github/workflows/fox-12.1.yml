@@ -1,6 +1,6 @@
       name: Recovery Builder - OrangeFOX
  
-     on:
+    on:
       workflow_dispatch:
       inputs:
       SYNC_URL:
