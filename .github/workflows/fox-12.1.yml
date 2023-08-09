@@ -1,8 +1,8 @@
-   name: Recovery Builder - OrangeFOX
- 
-   on:
-      workflow_dispatch:
-      inputs:
+  name: Recovery Builder - OrangeFOX
+
+on:
+  workflow_dispatch:
+    inputs:
       SYNC_URL:
         description: 'SYNC_URL'
         required: true
@@ -14,7 +14,7 @@
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
-        default: 'https://github.com/Assunzain/twrp_asus_X01AD'
+        default: 'https://github.com/Wrdn28/pbrp'
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
@@ -22,7 +22,7 @@
       DEVICE_PATH:
         description: 'DEVICE_PATH'
         required: true
-        default: 'device/asus/X01AD'
+        default: 'device/ASUS/X01AD'
       COMMON_TREE_URL:
         description: 'COMMON_TREE_URL (if no common tree, leave blank)'
         required: false
@@ -41,10 +41,6 @@
         description: 'BUILD_TARGET'
         required: true
         default: 'recovery'
-      FILE_TO_CHECK:
-        description: 'Specify which libs to check' # Use it know what kind of dependencies your missing for decryption.
-        required: false
-        default: 'system/bin/qseecomd'
 
  jobs:
     build:
