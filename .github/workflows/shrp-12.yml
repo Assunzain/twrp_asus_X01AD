@@ -123,7 +123,7 @@ jobs:
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make installclean && make ${{ github.event.inputs.BUILD_TARGET }} -j$(nproc --all) -j12
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make installclean && ${{ github.event.inputs.BUILD_TARGET }} -j$(nproc --all) -j12
       working-directory: ${{ steps.pwd.outputs.workdir }}
       
     - name: Upload to Release
