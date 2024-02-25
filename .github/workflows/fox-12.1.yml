@@ -18,7 +18,7 @@ on:
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: true
-        default: 'Ofox12.1'
+        default: 'Ofox12.x'
       DEVICE_PATH:
         description: 'DEVICE_PATH'
         required: true
@@ -56,7 +56,7 @@ jobs:
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
     - name: Cleanup
-      uses: rokibhasansagar/slimhub_actions@main
+      uses: Assunzain/slimhub_actions@main
       
     - name: Set Swap Space
       uses: pierotofy/set-swap-space@master
