@@ -21,7 +21,7 @@ on:
       DEVICE_TREE_BRANCH:
         description: 'Custom Recovery Tree Branch' # Your Device Tree Branch, make sure it's right.
         required: true
-        default: 'android-12.1'
+        default: 'pbrp-12.1'
       DEVICE_PATH:
         description: 'Specify your Device Path' # As is, just like your DEVICE_PATH in your BoardConfig.mk
         required: true
@@ -115,7 +115,7 @@ jobs:
     - name: Sync Dependencies
       run: |
         bash ${GITHUB_WORKSPACE}/scripts/convert.sh ${{ github.event.inputs.DEVICE_PATH }}/${{ steps.buildtree.outputs.value }}.dependencies
-        repo sync -j$(nproc --all) -j8
+        repo sync -j$(nproc --all) -j12
       working-directory: ${{ steps.pwd.outputs.workdir }}
       continue-on-error: true
 
