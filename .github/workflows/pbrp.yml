@@ -21,7 +21,7 @@ on:
       DEVICE_TREE_BRANCH:
         description: 'Custom Recovery Tree Branch' # Your Device Tree Branch, make sure it's right.
         required: true
-        default: 'pbrp-12.1'
+        default: 'android-12.1'
       DEVICE_PATH:
         description: 'Specify your Device Path' # As is, just like your DEVICE_PATH in your BoardConfig.mk
         required: true
@@ -37,12 +37,7 @@ on:
       BUILD_TARGET:
         description: 'Specify your Build Target' # Pick among boot, recovery and vendor_boot
         required: true
-        default: 'recovery'
-        type: choice
-        options:
-        - boot
-        - recovery
-        - vendorboot
+        default: 'mka pbrp'
       FILE_TO_CHECK:
         description: 'Specify which libs to check' # Use it know what kind of dependencies your missing for decryption.
         required: false
@@ -77,9 +72,10 @@ jobs:
         sudo apt-get -y install gperf gcc-multilib gcc-10-multilib g++-multilib g++-10-multilib libc6-dev lib32ncurses5-dev x11proto-core-dev libx11-dev tree lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc bc ccache lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libwxgtk3.0-gtk3-dev libxml2 lzop pngcrush schedtool squashfs-tools imagemagick libbz2-dev lzma ncftp qemu-user-static libstdc++-10-dev 2to3 python2-minimal python2 dh-python python-is-python3
 
     - name: Install OpenJDK
-      run: |
-        git clone https://github.com/cd-Spidey/Random.git ./opendjk
-        sudo bash opendjk/setup/packages/open_jdk.sh
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '8'
         
     - name: Install Git-Repo
       run: |
@@ -100,7 +96,7 @@ jobs:
         
     - name: Repo Sync
       run: |
-        repo sync -j$(nproc --all) --force-sync -j8
+        repo sync -j$(nproc --all) --force-sync -j12
       working-directory: workspace
       
     - name: Clone Device Tree
@@ -127,7 +123,7 @@ jobs:
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all) -j8
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make installclean && ${{ github.event.inputs.BUILD_TARGET }} -j$(nproc --all) -j12
       working-directory: ${{ steps.pwd.outputs.workdir }}
       
     - name: Upload to Release
