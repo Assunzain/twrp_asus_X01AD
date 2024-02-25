@@ -77,7 +77,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     export OF_HIDE_NOTCH=1
 
     #R
-    export OF_MAINTAINER_AVATAR="$INCLUDE_PATH/zain.jpg"
+    export OF_MAINTAINER_AVATAR="$INCLUDE_PATH/zain.png"
     export OF_MAINTAINER="AssunZain"
     export FOX_VERSION="R11.1"
 	export FOX_BUILD_TYPE="Beta"
