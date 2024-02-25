@@ -37,12 +37,7 @@ on:
       BUILD_TARGET:
         description: 'Specify your Build Target' # Pick among boot, recovery and vendor_boot
         required: true
-        default: 'recovery'
-        type: choice
-        options:
-        - boot
-        - recovery
-        - vendorboot
+        default: 'recoveryimage'
       FILE_TO_CHECK:
         description: 'Specify which libs to check' # Use it know what kind of dependencies your missing for decryption.
         required: false
