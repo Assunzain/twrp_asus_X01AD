@@ -17,3 +17,9 @@ service hvdcp_opti /system/bin/hvdcp_opti
     group root
     disabled
     seclabel u:r:recovery:s0
+
+on init
+    mkdir /system/bin
+    mkdir /system/etc
+    symlink /system/etc /etc
+    symlink /sbin/busybox /system/bin/sh
