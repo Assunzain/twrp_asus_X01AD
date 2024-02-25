@@ -103,9 +103,12 @@ PLATFORM_VERSION := 99.87.36
 PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 
 # TWRP Configuration
+TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_EXTRA_LANGUAGES := true
 TW_THEME := portrait_hdpi
+TW_H_OFFSET := -55
+TW_Y_OFFSET := 55
 TW_INCLUDE_CRYPTO := true
 TW_MAX_BRIGHTNESS := 255
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
@@ -120,12 +123,13 @@ TW_EXCLUDE_TWRPAPP := true
 TW_HAS_EDL_MODE := true
 TW_USE_TOOLBOX := true
 TW_SKIP_COMPATIBILITY_CHECK := true
-TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/virtual/thermal/thermal_zone3/temp
+TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/virtual/thermal/thermal_zone6/temp
 PB_DISABLE_DEFAULT_DM_VERITY := true
 PB_TORCH_PATH := "/sys/class/leds/led:torch_1"
 TW_EXCLUDE_APEX := true
 TW_EXCLUDE_PYTHON := true
 TW_INCLUDE_RESETPROP := true
+TW_DEVICE_VERSION := 0_Zain
 
 # Debug
 TWRP_INCLUDE_LOGCAT := true
