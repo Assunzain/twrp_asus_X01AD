@@ -123,7 +123,9 @@ TW_SKIP_COMPATIBILITY_CHECK := true
 TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/virtual/thermal/thermal_zone3/temp
 PB_DISABLE_DEFAULT_DM_VERITY := true
 PB_TORCH_PATH := "/sys/class/leds/led:torch_1"
-
+TW_EXCLUDE_APEX := true
+TW_EXCLUDE_PYTHON := true
+TW_INCLUDE_RESETPROP := true
 
 # Debug
 TWRP_INCLUDE_LOGCAT := true
@@ -135,7 +137,6 @@ TW_INPUT_BLACKLIST := "hbtp_vm"
 # exFAT FS Support
 TW_INCLUDE_FUSE_EXFAT := true
 
-TW_HAS_EDL_MODE := true
 TW_INCLUDE_FASTBOOTD := true
 
 # NTFS Support
