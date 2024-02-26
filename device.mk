@@ -9,6 +9,11 @@ PRODUCT_PRODUCT_PROPERTIES += \
 # Shipping API Level
 PRODUCT_SHIPPING_API_LEVEL := 27
 
+# Debug
+PRODUCT_PACKAGES += \
+    crash_dump \
+    libprocinfo.recovery
+
 # Keymaster
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.0-impl
