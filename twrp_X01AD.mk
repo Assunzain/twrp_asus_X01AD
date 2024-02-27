@@ -19,8 +19,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
 
 # Inherit some common Omni stuff.
-$(call inherit-product, vendor/pb/config/common.mk)
-
+$(call inherit-product, vendor/twrp/config/common.mk)
 
 # Charger
 PRODUCT_PACKAGES += \
@@ -29,6 +28,7 @@ PRODUCT_PACKAGES += \
 # Encryption
 PRODUCT_PACKAGES += \
     libcryptfs_hw
+
 PRODUCT_PACKAGES += \
     qcom_decrypt \
     qcom_decrypt_fbe
