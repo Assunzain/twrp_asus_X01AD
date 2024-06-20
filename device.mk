@@ -13,6 +13,9 @@ PRODUCT_SHIPPING_API_LEVEL := 27
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.0-impl
 
+PRODUCT_PACKAGES += \
+    libfscrypttwrp
+
 PRODUCT_PROPERTY_OVERRIDES += \
     keymaster_ver=3.0 \
     keymaster_ver=4.0
