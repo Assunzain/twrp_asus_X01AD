@@ -18,8 +18,8 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
 
-# Inherit some common Omni stuff.
-$(call inherit-product, vendor/pb/config/common.mk)
+# Inherit from our custom product configuration
+$(call inherit-product, vendor/twrp/config/common.mk)
 
 
 # Charger
@@ -32,11 +32,6 @@ PRODUCT_NAME := twrp_X01AD
 PRODUCT_BRAND := ASUS
 PRODUCT_MODEL := Zenfone Max M2
 PRODUCT_MANUFACTURER := ASUS
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    sys.usb.controller=7000000.dwc3 \
-    sys.usb.rndis.func.name=rndis_bam \
-    sys.usb.rmnet.func.name=rmnet_bam
 
 
 PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,device/asus/X01AD/recovery/root,recovery/root)
