@@ -14,6 +14,11 @@ PRODUCT_PACKAGES += \
     crash_dump \
     libprocinfo.recovery
 
+# Crypto
+PRODUCT_PACKAGES += \
+    qcom_decrypt \
+    qcom_decrypt_fbe
+
 # Keymaster
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.0-impl
