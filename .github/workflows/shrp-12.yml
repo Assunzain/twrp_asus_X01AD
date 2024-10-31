@@ -10,10 +10,11 @@ on:
         type: choice
         options:
         - https://github.com/SHRP/manifest.git
+        - https://github.com/Assunzain/manifest-1
       MANIFEST_BRANCH:
         description: 'Manifest Branch'
         required: true
-        default: 'shrp-12.1'
+        default: 'v3_11.0'
       DEVICE_TREE:
         description: 'Custom Recovery Tree' # Your already made Device Tree for TWRP
         required: true
